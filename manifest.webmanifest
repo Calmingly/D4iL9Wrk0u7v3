@@ -1,0 +1,16 @@
+{
+  "name": "D4iL9 Wrk0u7 v2",
+  "short_name": "D4iL9 v2",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "./icon_192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon_512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icon_192_maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icon_512_maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
