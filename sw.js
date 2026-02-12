@@ -1,4 +1,4 @@
-const CACHE_NAME = "micro_routine_v21"
+const CACHE_NAME = "micro_routine_v22"
 
 const CORE_ASSETS = [
   "./",
