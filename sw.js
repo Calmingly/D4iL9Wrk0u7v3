@@ -1,6 +1,5 @@
-const CACHE_VERSION = "v31";
+const CACHE_VERSION = "v33";
 const SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
-const MEDIA_CACHE = `media-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
 
 const APP_SHELL = [
@@ -12,10 +11,6 @@ const APP_SHELL = [
   "./icon_512.png",
   "./icon_192_maskable.png",
   "./icon_512_maskable.png",
-  "./images/twist.webp",
-  "./images/chest.webp",
-  "./images/pushups.webp",
-  "./images/plank.webp"
 ];
 
 self.addEventListener("install", (event) => {
@@ -28,13 +23,26 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((k) => ![SHELL_CACHE, MEDIA_CACHE, RUNTIME_CACHE].includes(k))
+          .filter((k) => ![SHELL_CACHE, RUNTIME_CACHE].includes(k))
           .map((k) => caches.delete(k))
       )
     )
   );
   self.clients.claim();
 });
+
+
+async function networkFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  try {
+    const resp = await fetch(request);
+    if (resp && resp.ok) cache.put(request, resp.clone());
+    return resp;
+  } catch {
+    const cached = await cache.match(request);
+    return cached || Response.error();
+  }
+}
 
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
@@ -48,15 +56,6 @@ async function staleWhileRevalidate(request, cacheName) {
   return cached || networkPromise || Response.error();
 }
 
-async function cacheFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
-  if (cached) return cached;
-  const resp = await fetch(request);
-  if (resp && resp.ok) cache.put(request, resp.clone());
-  return resp;
-}
-
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
@@ -65,14 +64,10 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   if (req.mode === "navigate" || req.destination === "document") {
-    event.respondWith(staleWhileRevalidate(req, SHELL_CACHE).catch(() => caches.match("./index.html")));
+    event.respondWith(networkFirst(req, SHELL_CACHE).catch(() => caches.match("./index.html")));
     return;
   }
 
-  if (req.destination === "video") {
-    event.respondWith(cacheFirst(req, MEDIA_CACHE));
-    return;
-  }
 
   if (["image", "style", "script", "font"].includes(req.destination)) {
     event.respondWith(staleWhileRevalidate(req, RUNTIME_CACHE));
