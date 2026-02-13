@@ -284,7 +284,12 @@
     <details class="card" id="historyEditorCard">
       <summary class="small">Edit previous days</summary>
       <div style="margin-top:10px; display:grid; gap:10px;">
-        <label class="small" for="historyDaySelect">Choose day</label>
+        <label class="small" for="historyDayPicker">Pick a previous date</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input id="historyDayPicker" type="date" style="padding:10px; border-radius:10px; background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--cardBorder);" />
+          <button id="historyLoadDayBtn" type="button">Load / Create Day</button>
+        </div>
+        <label class="small" for="historyDaySelect">Or choose existing edited day</label>
         <select id="historyDaySelect" style="padding:10px; border-radius:10px; background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--cardBorder);"></select>
         <div class="small" id="historyDaySummary">No day selected</div>
         <div id="historyChecklist"></div>
@@ -378,6 +383,8 @@
     const elFocusName = document.getElementById("focusName")
     const elFocusHint = document.getElementById("focusHint")
     const elQuiet = document.getElementById("quietToggle")
+    const elHistoryDayPicker = document.getElementById("historyDayPicker")
+    const elHistoryLoadDayBtn = document.getElementById("historyLoadDayBtn")
     const elHistoryDaySelect = document.getElementById("historyDaySelect")
     const elHistoryDaySummary = document.getElementById("historyDaySummary")
     const elHistoryChecklist = document.getElementById("historyChecklist")
@@ -416,9 +423,21 @@
         .reverse()
     }
 
-    function renderHistoryEditor() {
+    function keyToDateInputValue(key) {
+      const [y, m, d] = key.split("_")
+      return `${y}-${m}-${d}`
+    }
+
+    function dateInputValueToKey(v) {
+      if (!v) return ""
+      const [y, m, d] = v.split("-").map(Number)
+      if (!y || !m || !d) return ""
+      return `${y}_${pad2(m)}_${pad2(d)}`
+    }
+
+    function renderHistoryEditor(preferredDayKey = "") {
       const keys = historyDayKeys()
-      const previous = elHistoryDaySelect.value
+      const previous = preferredDayKey || elHistoryDaySelect.value
       elHistoryDaySelect.innerHTML = ""
 
       if (!keys.length) {
@@ -427,7 +446,10 @@
         opt.textContent = "No previous days yet"
         elHistoryDaySelect.appendChild(opt)
         elHistoryChecklist.innerHTML = ""
-        elHistoryDaySummary.textContent = "Complete a day first, then you can edit it here."
+        elHistoryDaySummary.textContent = "Pick a date above to create/edit a previous day."
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        elHistoryDayPicker.value = `${yesterday.getFullYear()}-${pad2(yesterday.getMonth() + 1)}-${pad2(yesterday.getDate())}`
         return
       }
 
@@ -439,7 +461,9 @@
       })
 
       if (keys.includes(previous)) elHistoryDaySelect.value = previous
-      renderHistoryDay(elHistoryDaySelect.value || keys[0])
+      const dayKey = elHistoryDaySelect.value || keys[0]
+      elHistoryDayPicker.value = keyToDateInputValue(dayKey)
+      renderHistoryDay(dayKey)
     }
 
     function renderHistoryDay(dayKey) {
@@ -894,7 +918,28 @@
       toast(`30-day average: ${count ? Math.round(total / count) : 0}%`)
     }
 
-    elHistoryDaySelect.onchange = () => renderHistoryDay(elHistoryDaySelect.value)
+    elHistoryDaySelect.onchange = () => {
+      const dayKey = elHistoryDaySelect.value
+      elHistoryDayPicker.value = keyToDateInputValue(dayKey)
+      renderHistoryDay(dayKey)
+    }
+
+    elHistoryLoadDayBtn.onclick = () => {
+      const dayKey = dateInputValueToKey(elHistoryDayPicker.value)
+      if (!dayKey) {
+        toast("Pick a valid date")
+        return
+      }
+      if (dayKey >= tKey) {
+        toast("Choose a previous day")
+        return
+      }
+      ensureDayShape(dayKey)
+      recomputeDaySummary(dayKey)
+      saveState(state)
+      renderHistoryEditor(dayKey)
+      toast(`Editing ${fmtDateLong(dayKey)}`)
+    }
 
     document.getElementById("compactDoneToggle").checked = state.settings.compactDone
     document.getElementById("compactDoneToggle").onchange = (e) => {
