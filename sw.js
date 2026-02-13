@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v30";
+const CACHE_VERSION = "v31";
 const SHELL_CACHE = `app-shell-${CACHE_VERSION}`;
 const MEDIA_CACHE = `media-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
@@ -7,11 +7,15 @@ const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./sw.js",
   "./icon_192.png",
   "./icon_512.png",
   "./icon_192_maskable.png",
   "./icon_512_maskable.png",
-  "./sw.js"
+  "./images/twist.webp",
+  "./images/chest.webp",
+  "./images/pushups.webp",
+  "./images/plank.webp"
 ];
 
 self.addEventListener("install", (event) => {
@@ -58,29 +62,23 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
 
   const url = new URL(req.url);
-  const isSameOrigin = url.origin === self.location.origin;
+  if (url.origin !== self.location.origin) return;
 
-  if (!isSameOrigin) return; // ignore cross-origin by default
-
-  // HTML/documents: stale-while-revalidate for freshness + speed
   if (req.mode === "navigate" || req.destination === "document") {
     event.respondWith(staleWhileRevalidate(req, SHELL_CACHE).catch(() => caches.match("./index.html")));
     return;
   }
 
-  // Media: cache-first (videos are large, stable assets)
   if (req.destination === "video") {
     event.respondWith(cacheFirst(req, MEDIA_CACHE));
     return;
   }
 
-  // Icons, CSS, JS: stale-while-revalidate
-  if (["image", "style", "script"].includes(req.destination)) {
+  if (["image", "style", "script", "font"].includes(req.destination)) {
     event.respondWith(staleWhileRevalidate(req, RUNTIME_CACHE));
     return;
   }
 
-  // fallback
   event.respondWith(
     caches.match(req).then((cached) => cached || fetch(req).catch(() => caches.match("./index.html")))
   );
