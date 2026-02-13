@@ -96,6 +96,17 @@
     .sub { color: var(--muted); font-size: 13px; }
     .small { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
+    /* NEW: dedicated hint style so it doesn't inherit .small uppercase/spacing */
+    .swipeHint {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--muted);
+      opacity: .9;
+    }
+
     .topActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     button, .toggle {
       background: var(--btnBg);
@@ -107,6 +118,21 @@
       font-weight: 600;
       cursor: pointer;
     }
+
+    /* NEW: normalize toggle/checkbox alignment */
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toggle input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
     button:focus-visible, .row:focus-visible, .toggle:focus-within {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
@@ -172,7 +198,7 @@
     <div class="card">
       <h1>D4iL9 Wrk0u7 v3</h1>
       <div class="sub" id="todayLine"></div>
-      <div class="small" style="margin-top:10px;">Swipe right to complete · left to reset</div>
+      <div class="swipeHint">Swipe right to complete · left to reset</div>
 
       <div class="topActions">
         <button id="startRoutineBtn">Start Routine</button>
