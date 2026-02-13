@@ -54,14 +54,41 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes flashGreen {
+      0% { background-color: rgba(50, 205, 50, 0.4); }
+      100% { background-color: transparent; }
+    }
+
+    @keyframes flashGrey {
+      0% { background-color: rgba(107, 114, 128, 0.4); }
+      100% { background-color: transparent; }
+    }
+
+    .flashGreen { animation: flashGreen 0.6s ease-out; }
+    .flashGrey { animation: flashGrey 0.6s ease-out; }
+
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: background 0.3s ease; }
     .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
     .card { background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; box-shadow: var(--shadowMd); animation: fadeIn 0.4s ease-out forwards; }
     h1 { font-size: 22px; margin: 0 0 8px; font-weight: 700; letter-spacing: -0.5px; }
     .sub { opacity: 0.7; font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    .row { display: flex; align-items: flex-start; gap: 20px; padding: 16px 0; border-top: 1px solid var(--border); animation: fadeIn 0.4s ease-out forwards; }
+    
+    .row { 
+      display: flex; 
+      align-items: flex-start; 
+      gap: 20px; 
+      padding: 16px 12px; /* Added horizontal padding for touch target */
+      margin: 0 -12px; /* Negative margin to align visuals while keeping touch area */
+      border-top: 1px solid var(--border); 
+      animation: fadeIn 0.4s ease-out forwards; 
+      touch-action: pan-y; /* Allows vertical scroll but captures horizontal swipes */
+      position: relative;
+      user-select: none;
+      border-radius: 12px; /* Smooth corners during flash */
+    }
     .row:first-of-type { border-top: none; }
-    input[type="checkbox"] { width: 26px; height: 26px; margin-top: 4px; cursor: pointer; border-radius: 6px; }
+    
+    input[type="checkbox"] { width: 26px; height: 26px; margin-top: 4px; cursor: pointer; border-radius: 6px; flex-shrink: 0; }
     .label { flex: 1; }
     .meta { opacity: 0.6; font-size: 12px; margin-top: 4px; font-weight: 500; }
     .howto { font-size: 14px; margin-top: 8px; line-height: 1.5; opacity: 0.85; }
@@ -133,7 +160,7 @@
       <h1>D4iL9 Wrk0u7 v3</h1>
       <div class="sub" id="todayLine"></div>
       <div class="small" style="margin-top:10px;">
-        Vibration On Finish. Sound Depends On Quiet.
+        Swipe Right to Complete. Left to Reset.
       </div>
 
       <div class="topActions">
@@ -514,19 +541,20 @@
       runnerHide()
     }
 
-    function setChecked(itemId, value, cbEl) {
-      const v = !!value
-      state.days[tKey].checks[itemId] = v
-
+    function triggerChange(itemId, isChecked, cbEl) {
+      state.days[tKey].checks[itemId] = isChecked
       if (!state.days[tKey].events) state.days[tKey].events = {}
-      if (v) state.days[tKey].events[itemId] = Date.now()
+      if (isChecked) state.days[tKey].events[itemId] = Date.now()
       else delete state.days[tKey].events[itemId]
-
-      if (cbEl) cbEl.checked = v
+      
+      if (cbEl) cbEl.checked = isChecked
       updateCompletion()
       saveState(state)
+      if (runnerActive && isChecked === true) startTransitionThenAdvance()
+    }
 
-      if (runnerActive && v === true) startTransitionThenAdvance()
+    function setChecked(itemId, value, cbEl) {
+      triggerChange(itemId, !!value, cbEl)
     }
 
     function computeStreak() {
@@ -877,13 +905,57 @@
         cb.checked = !!state.days[tKey].checks[item.id]
 
         cb.addEventListener("change", () => {
-          state.days[tKey].checks[item.id] = cb.checked
-          if (!state.days[tKey].events) state.days[tKey].events = {}
-          if (cb.checked) state.days[tKey].events[item.id] = Date.now()
-          else delete state.days[tKey].events[item.id]
-          updateCompletion()
-          saveState(state)
-          if (runnerActive && cb.checked === true) startTransitionThenAdvance()
+          triggerChange(item.id, cb.checked, cb)
+        })
+
+        // Swipe Logic
+        let startX = 0
+        let currentX = 0
+        let isDragging = false
+        const threshold = 100
+
+        row.addEventListener("touchstart", (e) => {
+          startX = e.touches[0].clientX
+          isDragging = true
+          row.style.transition = "none"
+        }, {passive: true})
+
+        row.addEventListener("touchmove", (e) => {
+          if (!isDragging) return
+          const x = e.touches[0].clientX
+          const diff = x - startX
+          currentX = diff
+          row.style.transform = `translateX(${diff}px)`
+          
+          if (diff > 50) {
+             row.style.backgroundColor = "rgba(50, 205, 50, 0.2)"
+          } else if (diff < -50) {
+             row.style.backgroundColor = "rgba(128, 128, 128, 0.2)"
+          } else {
+             row.style.backgroundColor = "transparent"
+          }
+        }, {passive: true})
+
+        row.addEventListener("touchend", () => {
+          isDragging = false
+          row.style.transition = "transform 0.3s ease, background-color 0.3s ease"
+          row.style.transform = "translateX(0)"
+          row.style.backgroundColor = "transparent"
+
+          if (currentX > threshold) {
+             if (!cb.checked) {
+                 triggerChange(item.id, true, cb)
+                 row.classList.add("flashGreen")
+                 setTimeout(() => row.classList.remove("flashGreen"), 600)
+             }
+          } else if (currentX < -threshold) {
+             if (cb.checked) {
+                 triggerChange(item.id, false, cb)
+                 row.classList.add("flashGrey")
+                 setTimeout(() => row.classList.remove("flashGrey"), 600)
+             }
+          }
+          currentX = 0
         })
 
         const label = document.createElement("div")
