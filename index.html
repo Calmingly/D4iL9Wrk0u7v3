@@ -280,6 +280,16 @@
       <button id="resetTodayBtn">Reset Today</button>
       <button id="markAllBtn">Mark All Done</button>
     </div>
+
+    <details class="card" id="historyEditorCard">
+      <summary class="small">Edit previous days</summary>
+      <div style="margin-top:10px; display:grid; gap:10px;">
+        <label class="small" for="historyDaySelect">Choose day</label>
+        <select id="historyDaySelect" style="padding:10px; border-radius:10px; background:rgba(255,255,255,.06); color:var(--text); border:1px solid var(--cardBorder);"></select>
+        <div class="small" id="historyDaySummary">No day selected</div>
+        <div id="historyChecklist"></div>
+      </div>
+    </details>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -368,6 +378,9 @@
     const elFocusName = document.getElementById("focusName")
     const elFocusHint = document.getElementById("focusHint")
     const elQuiet = document.getElementById("quietToggle")
+    const elHistoryDaySelect = document.getElementById("historyDaySelect")
+    const elHistoryDaySummary = document.getElementById("historyDaySummary")
+    const elHistoryChecklist = document.getElementById("historyChecklist")
 
     let runnerActive = false
     let runnerIndex = 0
@@ -376,6 +389,95 @@
     const itemElements = {}
     const checkboxElements = {}
     const timerControllers = {}
+
+    function ensureDayShape(dayKey) {
+      if (!state.days[dayKey]) state.days[dayKey] = { checks: {}, completedAll: false, counts: {}, events: {}, summary: {} }
+      if (!state.days[dayKey].checks) state.days[dayKey].checks = {}
+      if (!state.days[dayKey].counts) state.days[dayKey].counts = {}
+      if (!state.days[dayKey].events) state.days[dayKey].events = {}
+      if (!state.days[dayKey].summary) state.days[dayKey].summary = {}
+    }
+
+    function recomputeDaySummary(dayKey) {
+      ensureDayShape(dayKey)
+      const checks = state.days[dayKey].checks
+      const done = routine.reduce((acc, r) => acc + (checks[r.id] ? 1 : 0), 0)
+      const total = routine.length
+      const pct = Math.round((done / total) * 100)
+      state.days[dayKey].completedAll = done === total
+      state.days[dayKey].summary = { done, total, pct, updatedAt: Date.now() }
+      return { done, total, pct }
+    }
+
+    function historyDayKeys() {
+      return Object.keys(state.days)
+        .filter((k) => k !== tKey)
+        .sort()
+        .reverse()
+    }
+
+    function renderHistoryEditor() {
+      const keys = historyDayKeys()
+      const previous = elHistoryDaySelect.value
+      elHistoryDaySelect.innerHTML = ""
+
+      if (!keys.length) {
+        const opt = document.createElement("option")
+        opt.value = ""
+        opt.textContent = "No previous days yet"
+        elHistoryDaySelect.appendChild(opt)
+        elHistoryChecklist.innerHTML = ""
+        elHistoryDaySummary.textContent = "Complete a day first, then you can edit it here."
+        return
+      }
+
+      keys.forEach((k) => {
+        const opt = document.createElement("option")
+        opt.value = k
+        opt.textContent = fmtDateLong(k)
+        elHistoryDaySelect.appendChild(opt)
+      })
+
+      if (keys.includes(previous)) elHistoryDaySelect.value = previous
+      renderHistoryDay(elHistoryDaySelect.value || keys[0])
+    }
+
+    function renderHistoryDay(dayKey) {
+      if (!dayKey) return
+      ensureDayShape(dayKey)
+      const s = recomputeDaySummary(dayKey)
+      elHistoryDaySummary.textContent = `${fmtDateLong(dayKey)} · ${s.done}/${s.total} (${s.pct}%)`
+      elHistoryChecklist.innerHTML = ""
+
+      routine.forEach((item, idx) => {
+        const row = document.createElement("label")
+        row.style.display = "flex"
+        row.style.gap = "10px"
+        row.style.alignItems = "center"
+        row.style.padding = "8px 4px"
+        row.style.borderTop = "1px solid var(--cardBorder)"
+
+        const cb = document.createElement("input")
+        cb.type = "checkbox"
+        cb.checked = !!state.days[dayKey].checks[item.id]
+        cb.onchange = () => {
+          state.days[dayKey].checks[item.id] = !!cb.checked
+          if (cb.checked) state.days[dayKey].events[item.id] = Date.now()
+          else delete state.days[dayKey].events[item.id]
+          const rs = recomputeDaySummary(dayKey)
+          elHistoryDaySummary.textContent = `${fmtDateLong(dayKey)} · ${rs.done}/${rs.total} (${rs.pct}%)`
+          saveState(state)
+          updateCompletion()
+        }
+
+        const txt = document.createElement("div")
+        txt.textContent = `${idx + 1}. ${item.name}`
+        txt.style.fontSize = "14px"
+
+        row.append(cb, txt)
+        elHistoryChecklist.appendChild(row)
+      })
+    }
 
     function fmtDateLong(key) {
       const parts = key.split("_").map(Number)
@@ -792,6 +894,8 @@
       toast(`30-day average: ${count ? Math.round(total / count) : 0}%`)
     }
 
+    elHistoryDaySelect.onchange = () => renderHistoryDay(elHistoryDaySelect.value)
+
     document.getElementById("compactDoneToggle").checked = state.settings.compactDone
     document.getElementById("compactDoneToggle").onchange = (e) => {
       state.settings.compactDone = !!e.target.checked
@@ -832,6 +936,7 @@
     applyTheme()
     initChecklist()
     updateChecklistUI()
+    renderHistoryEditor()
   </script>
 </body>
 </html>
