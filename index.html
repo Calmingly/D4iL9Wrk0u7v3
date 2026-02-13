@@ -175,23 +175,6 @@
     .meta { margin-top: 4px; font-size: 12px; color: var(--muted); }
     .howto { margin-top: 6px; font-size: 14px; line-height: 1.45; }
 
-    .thumbCard {
-      margin-top: 10px;
-      border: 1px solid var(--cardBorder);
-      border-radius: 12px;
-      overflow: hidden;
-      background: rgba(255,255,255,.04);
-    }
-    .thumbCard img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      background: linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,.01));
-    }
-    details > summary { list-style: none; cursor: pointer; padding: 8px 10px; font-size: 13px; color: var(--muted); }
-    details > summary::-webkit-details-marker { display: none; }
-    details video { width: 100%; display: block; }
 
     .rowActions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
     .timerWrap, .counterWrap { margin-top: 10px; border: 1px solid var(--cardBorder); border-radius: 12px; padding: 10px; background: rgba(255,255,255,.03); }
@@ -290,7 +273,12 @@
 
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}))
+      window.addEventListener("load", async () => {
+        try {
+          const reg = await navigator.serviceWorker.register("./sw.js")
+          reg.update()
+        } catch {}
+      })
     }
 
     const routine = [
@@ -300,7 +288,6 @@
         name: "Seated Spinal Twist",
         detail: "40 seconds total",
         howto: "Sit upright. Rotate gently. At 20s switch sides.",
-        thumbWebp: "./images/twist.webp",
         timers: [{ label: "⏱️ Twist Timer", seconds: 40, autoCheck: true }]
       },
       {
@@ -309,8 +296,6 @@
         name: "Doorway Chest Stretch",
         detail: "60 seconds",
         howto: "Forearms on doorway; step forward gently.",
-        thumbWebp: "./images/chest.webp",
-        demoMp4: "ChestOpenerStretch.mp4",
         timers: [{ label: "⏱️ Chest Stretch Timer", seconds: 60, autoCheck: true }]
       },
       {
@@ -319,8 +304,6 @@
         name: "Wall Push Ups",
         detail: "Goal 10 reps",
         howto: "Hands at chest height, lean in and push out.",
-        thumbWebp: "./images/pushups.webp",
-        demoMp4: "WallPushUps.mp4",
         repCounter: { goal: 10 }
       },
       {
@@ -329,7 +312,6 @@
         name: "Plank",
         detail: "60 seconds",
         howto: "Straight line, brace core, neutral neck.",
-        thumbWebp: "./images/plank.webp",
         timers: [{ label: "⏱️ Plank Timer", seconds: 60, autoCheck: true, halfwayBuzzAt: 30 }]
       }
     ]
@@ -503,40 +485,6 @@
       elLastDone.textContent = res.lastFullKey ? fmtDateLong(res.lastFullKey) : "Never"
     }
 
-    function buildMediaBlock(item) {
-      if (!item.thumbWebp && !item.demoMp4) return null
-
-      const wrap = document.createElement("div")
-      wrap.className = "thumbCard"
-
-      const img = document.createElement("img")
-      img.loading = "lazy"
-      img.alt = `${item.name} thumbnail`
-      img.src = item.thumbWebp || "./icon_512.png"
-      img.onerror = () => { img.src = "./icon_512.png" }
-      wrap.appendChild(img)
-
-      if (item.demoMp4) {
-        const details = document.createElement("details")
-        const summary = document.createElement("summary")
-        summary.textContent = "Show demo video"
-        const video = document.createElement("video")
-        video.setAttribute("controls", "controls")
-        video.setAttribute("playsinline", "playsinline")
-        video.preload = "metadata"
-        const src = document.createElement("source")
-        src.src = item.demoMp4
-        src.type = "video/mp4"
-        video.appendChild(src)
-
-        details.appendChild(summary)
-        details.appendChild(video)
-        wrap.appendChild(details)
-      }
-
-      return wrap
-    }
-
     function buildTimerBlock(item, cb) {
       if (!item.timers?.length) return null
       const outer = document.createElement("div")
@@ -708,8 +656,6 @@
         actions.append(doneBtn, resetBtn)
 
         label.append(title, meta, howto)
-        const mediaBlock = buildMediaBlock(item)
-        if (mediaBlock) label.appendChild(mediaBlock)
         label.append(actions)
 
         const tBlock = buildTimerBlock(item, cb)
