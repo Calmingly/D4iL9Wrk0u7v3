@@ -13,187 +13,183 @@
   <style>
     :root {
       --bg: #0b0c10;
-      --card: rgba(20, 22, 28, 0.85);
+      --bgGradient: radial-gradient(1200px 600px at 20% -10%, #1f2937 0%, transparent 50%), #0b0c10;
+      --card: rgba(20,22,28,0.85);
       --text: #e8e8e8;
-      --border: rgba(38, 42, 54, 0.8);
+      --muted: #9ca3af;
+      --border: rgba(38,42,54,0.8);
       --btnBg: #2a2f3d;
       --btnText: #e8e8e8;
       --btnBorder: #3a4154;
       --accent: #32cd32;
-      --statBg: rgba(16, 19, 26, 0.6);
-      --barOuter: #0f1218;
-      --pipBg: #0f1218;
-      --pipOuter: #0b0c10;
-      --toastBg: #10131a;
-      --shadowMd: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --accentSoft: rgba(50,205,50,0.18);
+      --warningSoft: rgba(128,128,128,0.18);
+      --statBg: rgba(16,19,26,0.6);
+      --shadowMd: 0 8px 32px rgba(0,0,0,.35);
       --blur: blur(12px);
       --radius: 18px;
     }
 
-    body.lightMode {
+    body.theme-light {
       --bg: #f8fafc;
-      --card: rgba(255, 255, 255, 0.8);
+      --bgGradient: radial-gradient(1200px 600px at 20% -10%, #dbeafe 0%, transparent 50%), #f8fafc;
+      --card: rgba(255,255,255,0.82);
       --text: #1e293b;
-      --border: rgba(226, 232, 240, 0.8);
+      --muted: #64748b;
+      --border: rgba(226,232,240,.9);
       --btnBg: #f1f5f9;
       --btnText: #1e293b;
       --btnBorder: #e2e8f0;
       --accent: #22c55e;
-      --statBg: rgba(248, 250, 252, 0.6);
-      --barOuter: #e2e8f0;
-      --pipBg: #ffffff;
-      --pipOuter: #f1f5f9;
-      --toastBg: #ffffff;
-      --shadowMd: 0 8px 32px 0 rgba(148, 163, 184, 0.15);
+      --accentSoft: rgba(34,197,94,0.14);
+      --warningSoft: rgba(107,114,128,0.12);
+      --statBg: rgba(248,250,252,0.75);
+      --shadowMd: 0 8px 28px rgba(148,163,184,0.18);
       --blur: blur(8px);
-      --radius: 18px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    body.theme-energy {
+      --bg: #0f172a;
+      --bgGradient: radial-gradient(1200px 600px at 20% -10%, #312e81 0%, transparent 50%), #0f172a;
+      --card: rgba(15,23,42,0.86);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: rgba(99,102,241,0.35);
+      --btnBg: #1e293b;
+      --btnText: #e2e8f0;
+      --btnBorder: #334155;
+      --accent: #a78bfa;
+      --accentSoft: rgba(167,139,250,0.2);
+      --warningSoft: rgba(148,163,184,0.15);
+      --statBg: rgba(15,23,42,0.66);
+      --shadowMd: 0 10px 34px rgba(0,0,0,0.42);
+      --blur: blur(10px);
     }
 
-    @keyframes flashGreen {
-      0% { background-color: rgba(50, 205, 50, 0.4); }
-      100% { background-color: transparent; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
     }
 
-    @keyframes flashGrey {
-      0% { background-color: rgba(107, 114, 128, 0.4); }
-      100% { background-color: transparent; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background: var(--bgGradient);
+      min-height: 100dvh;
     }
 
-    .flashGreen { animation: flashGreen 0.6s ease-out; }
-    .flashGrey { animation: flashGrey 0.6s ease-out; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
 
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: background 0.3s ease; }
-    .wrap { max-width: 720px; margin: 0 auto; padding: 18px; }
-    .card { background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; box-shadow: var(--shadowMd); animation: fadeIn 0.4s ease-out forwards; }
-    h1 { font-size: 22px; margin: 0 0 8px; font-weight: 700; letter-spacing: -0.5px; }
-    .sub { opacity: 0.7; font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-    
-    .row { 
-      display: flex; 
-      align-items: flex-start; 
-      gap: 20px; 
-      padding: 16px 12px; /* Added horizontal padding for touch target */
-      margin: 0 -12px; /* Negative margin to align visuals while keeping touch area */
-      border-top: 1px solid var(--border); 
-      animation: fadeIn 0.4s ease-out forwards; 
-      touch-action: pan-y; /* Allows vertical scroll but captures horizontal swipes */
-      position: relative;
+    .card {
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin: 14px 0;
+      box-shadow: var(--shadowMd);
+    }
+
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    .sub { color: var(--muted); font-size: 13px; }
+    .small { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+    .topActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    button, .toggle {
+      background: var(--btnBg);
+      color: var(--btnText);
+      border: 1px solid var(--btnBorder);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:focus-visible, .row:focus-visible, .toggle:focus-within {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat { background: var(--statBg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
+    .big { font-size: 24px; color: var(--accent); font-weight: 700; }
+
+    .focusCard { border-color: color-mix(in srgb, var(--accent) 42%, var(--border)); }
+    .focusTop { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .focusName { font-size: 18px; font-weight: 800; margin-top: 6px; }
+    .focusHint { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+    .listControls { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+      padding: 14px 10px;
+      margin: 0 -10px;
+      border-radius: 12px;
+      touch-action: pan-y;
       user-select: none;
-      border-radius: 12px; /* Smooth corners during flash */
+      transition: opacity .2s ease, transform .2s ease, background-color .2s ease;
     }
-    .row:first-of-type { border-top: none; }
-    
-    input[type="checkbox"] { width: 26px; height: 26px; margin-top: 4px; cursor: pointer; border-radius: 6px; flex-shrink: 0; }
-    .label { flex: 1; }
-    .meta { opacity: 0.6; font-size: 12px; margin-top: 4px; font-weight: 500; }
-    .howto { font-size: 14px; margin-top: 8px; line-height: 1.5; opacity: 0.85; }
-    button { background: var(--btnBg); color: var(--btnText); border: 1px solid var(--btnBorder); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-weight: 600; transition: all 0.15s ease; cursor: pointer; }
-    button:active { transform: scale(0.95); }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .row:first-child { border-top: 0; }
+    .row--dimmed { opacity: .45; }
+    .row--active { background: var(--accentSoft); border-color: transparent; }
 
-    .stat .big, .timerDisplay, .counterBig, .dayPipPct { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; }
-    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .stat { background: var(--statBg); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
-    .stat .big { font-size: 24px; margin-top: 4px; color: var(--accent); font-weight: 700; }
-    .small { font-size: 12px; opacity: 0.6; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    input[type="checkbox"] { width: 24px; height: 24px; margin-top: 2px; flex-shrink: 0; }
+    .label { flex: 1; min-width: 0; }
+    .title { font-weight: 700; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .howto { font-size: 14px; margin-top: 6px; line-height: 1.45; }
 
-    details { margin-top: 10px; }
-    summary { cursor: pointer; user-select: none; opacity: 0.8; font-size: 14px; font-weight: 600; }
-    .demo { margin-top: 12px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: var(--barOuter); }
-    video { width: 100%; height: auto; display: block; }
-    .demoFallback { padding: 12px; font-size: 12px; opacity: 0.7; display: none; }
+    .rowActions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .ghost { background: transparent; }
 
-    .timerWrap { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--statBg); }
-    .timerHeader { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; }
-    .timerTitle { font-size: 13px; opacity: 0.8; font-weight: 600; }
-    .timerDisplay { font-size: 26px; letter-spacing: 0.5px; color: var(--accent); font-weight: 700; }
-    .timerBtns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-    .timerBtns button { padding: 10px 14px; }
-    .hint { font-size: 12px; opacity: 0.7; margin-top: 10px; line-height: 1.4; }
+    .timerWrap, .counterWrap {
+      margin-top: 10px; padding: 10px;
+      border: 1px solid var(--border); border-radius: 12px; background: var(--statBg);
+    }
+    .timerDisplay, .counterBig { font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .timerBtns, .counterBtns { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
 
-    .topActions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
-    .toggle { display: inline-flex; gap: 10px; align-items: center; padding: 10px 14px; border: 1px solid var(--btnBorder); border-radius: 14px; background: var(--btnBg); cursor: pointer; }
-    .toggle input { width: 18px; height: 18px; cursor: pointer; }
-    .toggle button { padding: 6px 12px; border-radius: 10px; min-width: 42px; }
+    .toast {
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+      background: var(--card); border: 1px solid var(--btnBorder); border-radius: 14px;
+      padding: 10px 14px; opacity: 0; pointer-events: none; transition: .2s ease;
+    }
+    .toast.show { opacity: 1; bottom: 24px; }
 
-    .runner { margin-top: 12px; padding: 16px; border: 1px solid var(--btnBorder); border-radius: 16px; background: var(--statBg); display: none; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
-    .runnerLine { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .runnerTitle { font-size: 14px; opacity: 0.8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .runnerStep { font-size: 13px; opacity: 0.75; margin-top: 8px; line-height: 1.5; }
-    .runnerBtns { display: flex; gap: 10px; align-items: center; }
-
-    .counterWrap { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--statBg); }
-    .counterHeader { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-    .counterTitle { font-size: 13px; opacity: 0.8; font-weight: 600; }
-    .counterBig { font-size: 26px; letter-spacing: 0.5px; color: var(--accent); font-weight: 700; }
-    .counterBtns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-
-    .miniHistory { display: grid; gap: 12px; }
-    .miniRow { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-    .miniTitle { font-size: 13px; opacity: 0.8; font-weight: 600; }
-    .miniValue { font-size: 13px; opacity: 0.8; font-weight: 600; }
-    .barOuter { margin-top: 10px; height: 12px; border-radius: 999px; background: var(--barOuter); border: 1px solid var(--border); overflow: hidden; position: relative; }
-    .barInner { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #4ade80); border-radius: 999px; position: relative; overflow: hidden; transition: width 0.4s ease; }
-    .barInner::after { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(255,255,255,0.2), transparent); }
-
-    .weekStrip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
-    .dayPip { background: var(--pipBg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; display: grid; gap: 10px; text-align: center; }
-    .dayPipTop { display: flex; flex-direction: column; gap: 4px; align-items: center; }
-    .dayPipLabel { font-size: 10px; opacity: 0.6; font-weight: 700; text-transform: uppercase; }
-    .dayPipPct { font-size: 11px; opacity: 0.8; font-weight: 600; }
-    .dayPipBarOuter { height: 24px; width: 6px; border-radius: 999px; background: var(--pipOuter); border: 1px solid var(--border); overflow: hidden; margin: 0 auto; display: flex; align-items: flex-end; }
-    .dayPipBarInner { width: 100%; height: 0%; background: linear-gradient(0deg, var(--accent), #4ade80); transition: height 0.4s ease; }
-    .todayPip { border-color: var(--accent); background: var(--statBg); box-shadow: 0 0 0 2px rgba(50, 205, 50, 0.2); }
-
-    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--toastBg); border: 1px solid var(--btnBorder); border-radius: 16px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: var(--shadowMd); }
-    .toastShow { opacity: 1; bottom: 32px; }
+    .visually-hidden {
+      position: absolute !important; width: 1px; height: 1px; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); border: 0; padding: 0;
+    }
   </style>
 </head>
-<body>
+<body class="theme-dark">
   <div class="wrap">
     <div class="card">
       <h1>D4iL9 Wrk0u7 v3</h1>
       <div class="sub" id="todayLine"></div>
-      <div class="small" style="margin-top:10px;">
-        Swipe Right to Complete. Left to Reset.
-      </div>
+      <div class="small" style="margin-top:10px;">Swipe right to complete · left to reset</div>
 
       <div class="topActions">
         <button id="startRoutineBtn">Start Routine</button>
         <button id="stopRoutineBtn" style="display:none;">Stop Routine</button>
-
-        <label class="toggle">
-          <input type="checkbox" id="quietToggle" />
-          <span>Quiet</span>
-        </label>
-
-        <label class="toggle">
-          <span>Gap</span>
-          <button id="gapMinusBtn" type="button">−</button>
-          <span id="gapValue" style="min-width:28px; text-align:center;">10</span>
-          <button id="gapPlusBtn" type="button">+</button>
-          <span>s</span>
-        </label>
-
+        <label class="toggle"><input type="checkbox" id="quietToggle" /> Quiet</label>
         <button id="themeToggleBtn">Theme</button>
         <button id="monthlyAvgBtn">Summary</button>
       </div>
+    </div>
 
-      <div class="runner" id="runnerBox">
-        <div class="runnerLine">
-          <div class="runnerTitle" id="runnerTitle">Routine Mode</div>
-          <div class="runnerBtns">
-            <button id="runnerNextNowBtn" style="display:none;">Start Next Now</button>
-            <button id="runnerSkipBtn">Skip Step</button>
-          </div>
-        </div>
-        <div class="runnerStep" id="runnerStepText"></div>
+    <div class="card focusCard" id="focusCard">
+      <div class="focusTop">
+        <div class="small">Current Step</div>
+        <button id="jumpToStepBtn" class="ghost">Jump to row</button>
       </div>
+      <div class="focusName" id="focusName">Not started</div>
+      <div class="focusHint" id="focusHint">Press “Start Routine” to begin.</div>
     </div>
 
     <div class="card">
@@ -201,35 +197,25 @@
         <div class="stat">
           <div class="small">Completion</div>
           <div class="big" id="todayPct">0%</div>
-          <div class="small" id="todayCount">0 Of 0</div>
+          <div class="small" id="todayCount">0 of 0</div>
         </div>
         <div class="stat">
           <div class="small">Streak</div>
-          <div class="big" id="streak">0 Days</div>
+          <div class="big" id="streak">0 days</div>
           <div class="small" id="lastDone">Never</div>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="small" style="margin-bottom:12px;">Recent Weekdays</div>
-
-      <div class="miniHistory">
-        <div class="miniRow">
-          <div class="miniTitle" id="yLabel">Yesterday</div>
-          <div class="miniValue" id="yValue">0%</div>
-        </div>
-        <div class="barOuter">
-          <div class="barInner" id="yBar"></div>
-        </div>
+      <div class="listControls">
+        <div class="small">Checklist</div>
+        <label class="toggle"><input type="checkbox" id="compactDoneToggle" /> Compact completed</label>
       </div>
-
-      <div class="weekStrip" id="weekStrip"></div>
+      <div id="checklist"></div>
     </div>
 
-    <div class="card" id="checklist"></div>
-
-    <div class="card" style="display:flex; gap:12px; flex-wrap:wrap; justify-content: center;">
+    <div class="card" style="display:flex; gap:10px; flex-wrap:wrap;">
       <button id="resetTodayBtn">Reset Today</button>
       <button id="markAllBtn">Mark All Done</button>
     </div>
@@ -239,829 +225,433 @@
 
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {})
-      })
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}))
     }
 
     const routine = [
-      {
-        id: "twist",
-        name: "Seated Spinal Twist",
-        detail: "40 Seconds Total",
-        howto: "Sit upright. Rotate gently. At 20 seconds, switch sides. Use your hand on a chair or thigh for light support.",
-        timers: [
-          { label: "40 Second Twist", seconds: 40, autoCheck: true }
-        ],
-        timerHint: "Switch sides at 20 seconds."
-      },
-      {
-        id: "doorway_pec",
-        name: "Doorway Chest Stretch",
-        detail: "60 Seconds Total",
-        howto: "Forearms on a doorway at shoulder height. Step forward gently until you feel a stretch across the chest.",
-        demoMp4: "ChestOpenerStretch.mp4",
-        timers: [
-          { label: "60 Second Chest Stretch", seconds: 60, autoCheck: true }
-        ],
-        timerHint: "Ease off slightly around 30 seconds, then lean in again."
-      },
-      {
-        id: "wall_pushups",
-        name: "Wall Push Ups",
-        detail: "Goal 10 Reps",
-        howto: "Stand about arm’s length from a wall. Hands at chest height. Bend elbows to lean in, then push back.",
-        demoMp4: "WallPushUps.mp4",
-        repCounter: { goal: 10 }
-      },
-      {
-        id: "plank",
-        name: "Plank",
-        detail: "60 Seconds",
-        howto: "Forearms down, body in a straight line. Tighten glutes and core. Keep neck neutral.",
-        timers: [
-          { label: "60 Second Plank", seconds: 60, autoCheck: true, halfwayBuzzAt: 30 }
-        ],
-        timerHint: "At 30 seconds, reset hips and shoulders."
-      }
-    ]
+      { id: "twist", name: "Seated Spinal Twist", detail: "40 seconds total", howto: "Sit upright. Rotate gently. At 20s switch sides.", timers: [{ label: "Twist Timer", seconds: 40, autoCheck: true }] },
+      { id: "doorway_pec", name: "Doorway Chest Stretch", detail: "60 seconds", howto: "Forearms on doorway; step forward gently.", demoMp4: "ChestOpenerStretch.mp4", timers: [{ label: "Chest Stretch Timer", seconds: 60, autoCheck: true }] },
+      { id: "wall_pushups", name: "Wall Push Ups", detail: "Goal 10 reps", howto: "Hands at chest height, lean in and push out.", demoMp4: "WallPushUps.mp4", repCounter: { goal: 10 } },
+      { id: "plank", name: "Plank", detail: "60 seconds", howto: "Straight line, brace core, neutral neck.", timers: [{ label: "Plank Timer", seconds: 60, autoCheck: true, halfwayBuzzAt: 30 }] }
+    ];
 
-    const pad2 = (n) => String(n).padStart(2, "0")
-    const keyForDate = (d) => `${d.getFullYear()}_${pad2(d.getMonth() + 1)}_${pad2(d.getDate())}`
-    const todayKey = () => keyForDate(new Date())
-    const storeKey = "microRoutine_v15"
+    const pad2 = (n) => String(n).padStart(2, "0");
+    const keyForDate = (d) => `${d.getFullYear()}_${pad2(d.getMonth()+1)}_${pad2(d.getDate())}`;
+    const todayKey = () => keyForDate(new Date());
+    const storeKey = "microRoutine_v16";
 
     const loadState = () => {
-      try { return JSON.parse(localStorage.getItem(storeKey)) || { days: {}, settings: {} } }
-      catch { return { days: {}, settings: {} } }
-    }
+      try { return JSON.parse(localStorage.getItem(storeKey)) || { days: {}, settings: {} }; }
+      catch { return { days: {}, settings: {} }; }
+    };
+    const saveState = (s) => localStorage.setItem(storeKey, JSON.stringify(s));
 
-    const saveState = (s) => localStorage.setItem(storeKey, JSON.stringify(s))
+    const state = loadState();
+    const tKey = todayKey();
+    if (!state.days[tKey]) state.days[tKey] = { checks: {}, completedAll: false, counts: {}, events: {}, summary: {} };
+    if (!state.settings.theme) state.settings.theme = "dark";
+    if (typeof state.settings.quietMode !== "boolean") state.settings.quietMode = false;
+    if (typeof state.settings.compactDone !== "boolean") state.settings.compactDone = false;
 
-    const state = loadState()
-    const tKey = todayKey()
+    const elChecklist = document.getElementById("checklist");
+    const elTodayLine = document.getElementById("todayLine");
+    const elTodayPct = document.getElementById("todayPct");
+    const elTodayCount = document.getElementById("todayCount");
+    const elStreak = document.getElementById("streak");
+    const elLastDone = document.getElementById("lastDone");
+    const elToast = document.getElementById("toast");
+    const elThemeToggle = document.getElementById("themeToggleBtn");
+    const elQuiet = document.getElementById("quietToggle");
+    const elCompactDone = document.getElementById("compactDoneToggle");
+    const elFocusName = document.getElementById("focusName");
+    const elFocusHint = document.getElementById("focusHint");
 
-    if (!state.days[tKey]) state.days[tKey] = { checks: {}, completedAll: false, counts: {}, events: {}, summary: {} }
-    if (!state.settings) state.settings = {}
-    if (typeof state.settings.quietMode !== "boolean") state.settings.quietMode = false
-    if (typeof state.settings.transitionSeconds !== "number") state.settings.transitionSeconds = 10
-    if (!state.settings.theme) state.settings.theme = "dark"
+    let runnerActive = false;
+    let runnerIndex = 0;
+    let activeItemId = null;
 
-    const elChecklist = document.getElementById("checklist")
-    const elTodayLine = document.getElementById("todayLine")
-    const elTodayPct = document.getElementById("todayPct")
-    const elTodayCount = document.getElementById("todayCount")
-    const elStreak = document.getElementById("streak")
-    const elLastDone = document.getElementById("lastDone")
-
-    const elQuiet = document.getElementById("quietToggle")
-    const elStartRoutine = document.getElementById("startRoutineBtn")
-    const elStopRoutine = document.getElementById("stopRoutineBtn")
-    const elRunnerBox = document.getElementById("runnerBox")
-    const elRunnerTitle = document.getElementById("runnerTitle")
-    const elRunnerStepText = document.getElementById("runnerStepText")
-    const elRunnerSkipBtn = document.getElementById("runnerSkipBtn")
-    const elRunnerNextNowBtn = document.getElementById("runnerNextNowBtn")
-
-    const elGapMinus = document.getElementById("gapMinusBtn")
-    const elGapPlus = document.getElementById("gapPlusBtn")
-    const elGapValue = document.getElementById("gapValue")
-
-    const elYLabel = document.getElementById("yLabel")
-    const elYValue = document.getElementById("yValue")
-    const elYBar = document.getElementById("yBar")
-    const elWeekStrip = document.getElementById("weekStrip")
-
-    const elThemeToggle = document.getElementById("themeToggleBtn")
-    const elToast = document.getElementById("toast")
-
-    function applyTheme() {
-      const isLight = state.settings.theme === "light"
-      document.body.classList.toggle("lightMode", isLight)
-      document.getElementById("metaThemeColor").setAttribute("content", isLight ? "#f8fafc" : "#0b0c10")
-    }
-
-    elThemeToggle.onclick = () => {
-      state.settings.theme = state.settings.theme === "dark" ? "light" : "dark"
-      saveState(state)
-      applyTheme()
-    }
+    const itemElements = {};
+    const checkboxElements = {};
+    const timerControllers = {};
 
     function toast(msg) {
-      elToast.textContent = msg
-      elToast.classList.add("toastShow")
-      setTimeout(() => elToast.classList.remove("toastShow"), 2500)
+      elToast.textContent = msg;
+      elToast.classList.add("show");
+      setTimeout(() => elToast.classList.remove("show"), 2200);
     }
 
-    const fmtDateLong = (key) => {
-      const parts = key.split("_").map(Number)
-      return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "short", day: "numeric" })
+    function fmtDateLong(key) {
+      const [y,m,d] = key.split("_").map(Number);
+      return new Date(y,m-1,d).toLocaleDateString(undefined, { weekday:"long", year:"numeric", month:"short", day:"numeric" });
     }
 
-    const fmtDow = (d) => d.toLocaleDateString(undefined, { weekday: "short" })
-
-    function formatTime(sec) {
-      const s = Math.max(0, Math.floor(sec))
-      const m = Math.floor(s / 60)
-      const r = s % 60
-      return m > 0 ? `${m}:${pad2(r)}` : `${r}`
+    function applyTheme() {
+      const cls = state.settings.theme === "light" ? "theme-light" : state.settings.theme === "energy" ? "theme-energy" : "theme-dark";
+      document.body.classList.remove("theme-dark","theme-light","theme-energy");
+      document.body.classList.add(cls);
+      document.getElementById("metaThemeColor").setAttribute("content", cls === "theme-light" ? "#f8fafc" : cls === "theme-energy" ? "#0f172a" : "#0b0c10");
     }
 
-    function vibrate(pattern) {
-      if (navigator.vibrate) navigator.vibrate(pattern)
+    function rotateTheme() {
+      const seq = ["dark", "light", "energy"];
+      const idx = seq.indexOf(state.settings.theme);
+      state.settings.theme = seq[(idx + 1) % seq.length];
+      saveState(state); applyTheme();
+      toast(`Theme: ${state.settings.theme}`);
     }
 
-    function vibrateFinish() {
-      vibrate([150, 80, 150, 80, 250])
+    function setChecked(itemId, checked) {
+      state.days[tKey].checks[itemId] = !!checked;
+      if (!state.days[tKey].events) state.days[tKey].events = {};
+      if (checked) state.days[tKey].events[itemId] = Date.now();
+      else delete state.days[tKey].events[itemId];
+      if (checkboxElements[itemId]) checkboxElements[itemId].checked = !!checked;
+      updateRowVisual(itemId);
+      updateCompletion();
+      saveState(state);
     }
 
-    function vibrateHalfway() {
-      vibrate([80, 80, 80])
-    }
-
-    function isQuiet() {
-      return !!state.settings.quietMode
-    }
-
-    function getTransitionSeconds() {
-      const v = Number(state.settings.transitionSeconds)
-      if (!Number.isFinite(v)) return 10
-      return Math.max(0, Math.min(60, Math.floor(v)))
-    }
-
-    function beepFinish() {
-      if (isQuiet()) return
-
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext
-        if (!AudioCtx) return
-
-        const ctx = new AudioCtx()
-        const o = ctx.createOscillator()
-        const g = ctx.createGain()
-
-        o.type = "sine"
-        o.frequency.value = 440
-
-        g.gain.value = 0.0001
-        o.connect(g)
-        g.connect(ctx.destination)
-
-        o.start()
-
-        const now = ctx.currentTime
-        g.gain.exponentialRampToValueAtTime(0.2, now + 0.02)
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.25)
-
-        o.stop(now + 0.27)
-
-        setTimeout(() => { ctx.close() }, 400)
-      } catch {}
-    }
-
-    function setCount(itemId, count) {
-      if (!state.days[tKey].counts) state.days[tKey].counts = {}
-      state.days[tKey].counts[itemId] = Math.max(0, Math.floor(count))
-      saveState(state)
-    }
-
-    function getCount(itemId) {
-      if (!state.days[tKey].counts) return 0
-      return state.days[tKey].counts[itemId] || 0
-    }
-
-    let runnerActive = false
-    let runnerIndex = 0
-    let transitionTimer = null
-    let transitionRemaining = 0
-
-    function runnerShow(title, text, showNextNow) {
-      elRunnerTitle.textContent = title
-      elRunnerStepText.textContent = text
-      elRunnerBox.style.display = "block"
-      elRunnerNextNowBtn.style.display = showNextNow ? "inline-block" : "none"
-    }
-
-    function runnerHide() {
-      elRunnerBox.style.display = "none"
-      elRunnerNextNowBtn.style.display = "none"
-    }
-
-    function clearTransition() {
-      if (transitionTimer) clearInterval(transitionTimer)
-      transitionTimer = null
-      transitionRemaining = 0
-      elRunnerNextNowBtn.style.display = "none"
-    }
-
-    const itemElements = {}
-    const timerControllers = {}
-
-    function scrollToItem(itemId) {
-      const el = itemElements[itemId]
-      if (!el) return
-      el.scrollIntoView({ behavior: "smooth", block: "start" })
-    }
-
-    function getRunnerStepText(item) {
-      if (item.id === "wall_pushups") return "Do Wall Push Ups. Tap plus to track."
-      if (item.timers && item.timers.length) return "Timer auto checks when it finishes."
-      return "Complete this step."
-    }
-
-    function advanceRunnerToNextNeeded(forceStartTimer) {
-      if (!runnerActive) return
-
-      const checks = state.days[tKey].checks
-
-      while (runnerIndex < routine.length && checks[routine[runnerIndex].id]) {
-        runnerIndex += 1
+    function updateRowVisual(itemId) {
+      const row = itemElements[itemId];
+      if (!row) return;
+      const checked = !!state.days[tKey].checks[itemId];
+      if (state.settings.compactDone && checked) {
+        row.querySelector(".howto")?.classList.add("visually-hidden");
+        row.querySelector(".meta")?.classList.add("visually-hidden");
+      } else {
+        row.querySelector(".howto")?.classList.remove("visually-hidden");
+        row.querySelector(".meta")?.classList.remove("visually-hidden");
       }
 
-      if (runnerIndex >= routine.length) {
-        clearTransition()
-        runnerShow("Routine Mode", "Routine finished.", false)
-        setTimeout(runnerStop, 1200)
-        return
+      row.classList.toggle("row--active", itemId === activeItemId);
+      row.classList.toggle("row--dimmed", runnerActive && itemId !== activeItemId);
+    }
+
+    function updateFocusCard() {
+      if (!runnerActive || runnerIndex >= routine.length) {
+        activeItemId = null;
+        elFocusName.textContent = "Not started";
+        elFocusHint.textContent = "Press “Start Routine” to begin.";
+        routine.forEach(r => updateRowVisual(r.id));
+        return;
       }
-
-      clearTransition()
-
-      const item = routine[runnerIndex]
-      scrollToItem(item.id)
-      runnerShow(`Step ${runnerIndex + 1} Of ${routine.length}`, `${item.name}. ${getRunnerStepText(item)}`, false)
-
-      if (forceStartTimer && item.timers && item.timers.length) {
-        const controller = timerControllers[item.id] && timerControllers[item.id][0]
-        if (controller && controller.start) controller.start()
-      }
-    }
-
-    function startTransitionThenAdvance() {
-      if (!runnerActive) return
-
-      clearTransition()
-
-      const gap = getTransitionSeconds()
-      if (gap <= 0) {
-        advanceRunnerToNextNeeded(true)
-        return
-      }
-
-      transitionRemaining = gap
-      runnerShow("Transition", `Next step in ${transitionRemaining}s.`, true)
-
-      transitionTimer = setInterval(() => {
-        transitionRemaining -= 1
-
-        if (transitionRemaining <= 0) {
-          clearTransition()
-          advanceRunnerToNextNeeded(true)
-          return
-        }
-
-        runnerShow("Transition", `Next step in ${transitionRemaining}s.`, true)
-      }, 1000)
-    }
-
-    function runnerStart() {
-      runnerActive = true
-      runnerIndex = 0
-      elStartRoutine.style.display = "none"
-      elStopRoutine.style.display = "inline-block"
-      runnerShow("Routine Mode", "Starting.", false)
-      advanceRunnerToNextNeeded(true)
-    }
-
-    function runnerStop() {
-      runnerActive = false
-      clearTransition()
-      elStartRoutine.style.display = "inline-block"
-      elStopRoutine.style.display = "none"
-      runnerHide()
-    }
-
-    function triggerChange(itemId, isChecked, cbEl) {
-      state.days[tKey].checks[itemId] = isChecked
-      if (!state.days[tKey].events) state.days[tKey].events = {}
-      if (isChecked) state.days[tKey].events[itemId] = Date.now()
-      else delete state.days[tKey].events[itemId]
-      
-      if (cbEl) cbEl.checked = isChecked
-      updateCompletion()
-      saveState(state)
-      if (runnerActive && isChecked === true) startTransitionThenAdvance()
-    }
-
-    function setChecked(itemId, value, cbEl) {
-      triggerChange(itemId, !!value, cbEl)
+      const item = routine[runnerIndex];
+      activeItemId = item.id;
+      elFocusName.textContent = item.name;
+      elFocusHint.textContent = item.howto;
+      routine.forEach(r => updateRowVisual(r.id));
     }
 
     function computeStreak() {
-      const keys = Object.keys(state.days).sort()
-      const fullDays = keys.filter((k) => state.days[k].completedAll)
-      if (fullDays.length === 0) return { streak: 0, lastFullKey: null }
-
-      const set = new Set(fullDays)
-      let streak = 0
-      const parts = tKey.split("_").map(Number)
-      let d = new Date(parts[0], parts[1] - 1, parts[2])
-
-      while (true) {
-        const k = keyForDate(d)
-        if (set.has(k)) {
-          streak += 1
-          d.setDate(d.getDate() - 1)
-        } else break
-      }
-
-      return { streak, lastFullKey: fullDays[fullDays.length - 1] }
-    }
-
-    function getDaySummary(key) {
-      const day = state.days[key]
-      const pct = day && day.summary && typeof day.summary.pct === "number" ? day.summary.pct : 0
-      const done = day && day.summary && typeof day.summary.done === "number" ? day.summary.done : 0
-      const total = day && day.summary && typeof day.summary.total === "number" ? day.summary.total : routine.length
-      return { pct, done, total }
-    }
-
-    function renderHistoryCompact() {
-      const now = new Date()
-      const y = new Date(now)
-      y.setDate(y.getDate() - 1)
-      const yKey = keyForDate(y)
-      const ySum = getDaySummary(yKey)
-
-      elYLabel.textContent = `Yesterday ${fmtDow(y)}`
-      elYValue.textContent = `${ySum.pct}%`
-      elYBar.style.width = `${Math.max(0, Math.min(100, ySum.pct))}%`
-
-      elWeekStrip.innerHTML = ""
-      const start = new Date(now)
-      start.setDate(start.getDate() - 6)
-
-      for (let i = 0; i < 7; i += 1) {
-        const d = new Date(start)
-        d.setDate(start.getDate() + i)
-        const dayNum = d.getDay()
-        if (dayNum === 0 || dayNum === 6) continue
-
-        const key = keyForDate(d)
-        const sum = getDaySummary(key)
-
-        const pip = document.createElement("div")
-        pip.className = "dayPip" + (key === tKey ? " todayPip" : "")
-
-        const top = document.createElement("div")
-        top.className = "dayPipTop"
-
-        const label = document.createElement("div")
-        label.className = "dayPipLabel"
-        label.textContent = fmtDow(d)
-
-        const pct = document.createElement("div")
-        pct.className = "dayPipPct"
-        pct.textContent = `${sum.pct}%`
-
-        top.appendChild(label)
-        top.appendChild(pct)
-
-        const barOuter = document.createElement("div")
-        barOuter.className = "dayPipBarOuter"
-
-        const barInner = document.createElement("div")
-        barInner.className = "dayPipBarInner"
-        barInner.style.height = `${Math.max(0, Math.min(100, sum.pct))}%`
-
-        barOuter.appendChild(barInner)
-        pip.appendChild(top)
-        pip.appendChild(barOuter)
-        elWeekStrip.appendChild(pip)
-      }
+      const keys = Object.keys(state.days).sort();
+      const fullDays = keys.filter(k => state.days[k]?.completedAll);
+      if (!fullDays.length) return { streak: 0, lastFullKey: null };
+      const set = new Set(fullDays);
+      let streak = 0;
+      const [y,m,d] = tKey.split("_").map(Number);
+      const date = new Date(y,m-1,d);
+      while (set.has(keyForDate(date))) { streak += 1; date.setDate(date.getDate()-1); }
+      return { streak, lastFullKey: fullDays[fullDays.length-1] };
     }
 
     function updateCompletion() {
-      const checks = state.days[tKey].checks
-      const doneCount = routine.reduce((acc, r) => acc + (checks[r.id] ? 1 : 0), 0)
-      const total = routine.length
-      const pct = Math.round((doneCount / total) * 100)
+      const checks = state.days[tKey].checks;
+      const done = routine.reduce((a,r) => a + (checks[r.id] ? 1 : 0), 0);
+      const total = routine.length;
+      const pct = Math.round((done / total) * 100);
 
-      elTodayPct.textContent = `${pct}%`
-      elTodayCount.textContent = `${doneCount} Of ${total}`
+      elTodayPct.textContent = `${pct}%`;
+      elTodayCount.textContent = `${done} of ${total}`;
+      state.days[tKey].completedAll = done === total;
+      state.days[tKey].summary = { done, total, pct, updatedAt: Date.now() };
 
-      state.days[tKey].completedAll = doneCount === total
-
-      if (!state.days[tKey].summary) state.days[tKey].summary = {}
-      state.days[tKey].summary.total = total
-      state.days[tKey].summary.done = doneCount
-      state.days[tKey].summary.pct = pct
-      state.days[tKey].summary.updatedAt = Date.now()
-
-      const res = computeStreak()
-      elStreak.textContent = `${res.streak} Day${res.streak === 1 ? "" : "s"}`
-      elLastDone.textContent = res.lastFullKey ? fmtDateLong(res.lastFullKey) : "Never"
-
-      saveState(state)
-      renderHistoryCompact()
+      const streak = computeStreak();
+      elStreak.textContent = `${streak.streak} day${streak.streak === 1 ? "" : "s"}`;
+      elLastDone.textContent = streak.lastFullKey ? fmtDateLong(streak.lastFullKey) : "Never";
     }
 
-    function buildDemoBlock(item) {
-      if (!item.demoMp4) return null
-      const wrap = document.createElement("div")
-      const details = document.createElement("details")
-      const summary = document.createElement("summary")
-      summary.textContent = "Show Demo"
-      details.appendChild(summary)
+    function buildTimerBlock(item, cb) {
+      if (!item.timers?.length) return null;
+      const outer = document.createElement("div");
 
-      const demo = document.createElement("div")
-      demo.className = "demo"
-      const fallback = document.createElement("div")
-      fallback.className = "demoFallback"
-      fallback.textContent = "Demo Not Found."
+      item.timers.forEach((t, i) => {
+        const wrap = document.createElement("div");
+        wrap.className = "timerWrap";
+        const title = document.createElement("div");
+        title.textContent = t.label;
+        const display = document.createElement("div");
+        display.className = "timerDisplay";
+        display.textContent = `${t.seconds}`;
 
-      const vid = document.createElement("video")
-      vid.setAttribute("controls", "controls")
-      vid.setAttribute("playsinline", "playsinline")
-      const src = document.createElement("source")
-      src.src = item.demoMp4
-      src.type = "video/mp4"
-      vid.appendChild(src)
+        const btns = document.createElement("div");
+        btns.className = "timerBtns";
+        const startBtn = document.createElement("button");
+        startBtn.textContent = "Start";
+        const pauseBtn = document.createElement("button");
+        pauseBtn.textContent = "Pause";
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Reset";
 
-      vid.addEventListener("error", () => {
-        vid.style.display = "none"
-        fallback.style.display = "block"
-      })
-
-      demo.appendChild(vid)
-      demo.appendChild(fallback)
-      details.appendChild(demo)
-      wrap.appendChild(details)
-      return wrap
-    }
-
-    function buildTimersBlock(item, cbEl) {
-      if (!item.timers || !Array.isArray(item.timers) || item.timers.length === 0) return null
-      const outer = document.createElement("div")
-
-      item.timers.forEach((t, timerIndex) => {
-        const wrap = document.createElement("div")
-        wrap.className = "timerWrap"
-        const header = document.createElement("div")
-        header.className = "timerHeader"
-        const title = document.createElement("div")
-        title.className = "timerTitle"
-        title.textContent = t.label
-        const display = document.createElement("div")
-        display.className = "timerDisplay"
-        display.textContent = formatTime(t.seconds)
-
-        header.appendChild(title)
-        header.appendChild(display)
-
-        const btns = document.createElement("div")
-        btns.className = "timerBtns"
-        const startBtn = document.createElement("button")
-        startBtn.textContent = `Start ${t.seconds}s`
-        const pauseBtn = document.createElement("button")
-        pauseBtn.textContent = "Pause"
-        const resetBtn = document.createElement("button")
-        resetBtn.textContent = "Reset"
-
-        let remaining = t.seconds
-        let interval = null
-        let startedThisRun = false
-        let running = false
-        let halfwayBuzzed = false
-
-        function stopInterval() {
-          if (interval) clearInterval(interval)
-          interval = null
-          running = false
-        }
-
-        function updateDisplay() {
-          display.textContent = remaining <= 0 ? "Done" : formatTime(remaining)
-        }
-
-        function finishNaturally() {
-          if (!startedThisRun) return
-          if (remaining > 0) return
-          vibrateFinish()
-          beepFinish()
-          if (t.autoCheck) setChecked(item.id, true, cbEl)
-          const ev = new CustomEvent("timerFinished", { detail: { itemId: item.id, timerIndex } })
-          document.dispatchEvent(ev)
-        }
-
-        function tick() {
-          remaining -= 1
-          if (remaining < 0) remaining = 0
-          updateDisplay()
-          if (item.id === "plank" && typeof t.halfwayBuzzAt === "number") {
-            if (!halfwayBuzzed && remaining === t.halfwayBuzzAt) {
-              halfwayBuzzed = true
-              vibrateHalfway()
-            }
-          }
-          if (remaining <= 0) {
-            stopInterval()
-            finishNaturally()
-          }
-        }
-
-        startBtn.onclick = async () => {
-          if (running) return
+        let remaining = t.seconds, interval = null, halfwayBuzzed = false;
+        const beep = () => {
+          if (state.settings.quietMode) return;
           try {
-            if (!isQuiet()) {
-              const AudioCtx = window.AudioContext || window.webkitAudioContext
-              if (AudioCtx) {
-                const ctx = new AudioCtx()
-                if (ctx.state === "suspended") await ctx.resume()
-                setTimeout(() => ctx.close(), 60)
-              }
-            }
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            const c = new Ctx(), o = c.createOscillator(), g = c.createGain();
+            o.type = "sine"; o.frequency.value = 540;
+            o.connect(g); g.connect(c.destination);
+            g.gain.value = 0.0001; o.start();
+            const n = c.currentTime;
+            g.gain.exponentialRampToValueAtTime(0.15, n + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.0001, n + 0.2);
+            o.stop(n + 0.22); setTimeout(() => c.close(), 250);
           } catch {}
-          if (remaining <= 0) remaining = t.seconds
-          startedThisRun = true
-          halfwayBuzzed = false
-          running = true
-          updateDisplay()
-          stopInterval()
-          interval = setInterval(tick, 1000)
-        }
+        };
 
-        pauseBtn.onclick = () => stopInterval()
-        resetBtn.onclick = () => {
-          stopInterval()
-          remaining = t.seconds
-          startedThisRun = false
-          halfwayBuzzed = false
-          updateDisplay()
-        }
+        const render = () => display.textContent = remaining <= 0 ? "Done" : String(remaining);
+        const stop = () => { if (interval) clearInterval(interval); interval = null; };
+        const tick = () => {
+          remaining = Math.max(0, remaining - 1);
+          if (!halfwayBuzzed && t.halfwayBuzzAt && remaining === t.halfwayBuzzAt && navigator.vibrate) {
+            halfwayBuzzed = true; navigator.vibrate([60,60,60]);
+          }
+          render();
+          if (remaining <= 0) {
+            stop();
+            if (navigator.vibrate) navigator.vibrate([140,80,140]);
+            beep();
+            if (t.autoCheck) setChecked(item.id, true, cb);
+          }
+        };
 
-        btns.appendChild(startBtn)
-        btns.appendChild(pauseBtn)
-        btns.appendChild(resetBtn)
-        wrap.appendChild(header)
-        wrap.appendChild(btns)
+        startBtn.onclick = () => { if (remaining <= 0) remaining = t.seconds; stop(); interval = setInterval(tick, 1000); render(); };
+        pauseBtn.onclick = stop;
+        resetBtn.onclick = () => { stop(); remaining = t.seconds; halfwayBuzzed = false; render(); };
 
-        if (item.timerHint) {
-          const hint = document.createElement("div")
-          hint.className = "hint"
-          hint.textContent = item.timerHint
-          wrap.appendChild(hint)
-        }
+        btns.append(startBtn, pauseBtn, resetBtn);
+        wrap.append(title, display, btns);
+        outer.appendChild(wrap);
 
-        if (!timerControllers[item.id]) timerControllers[item.id] = {}
-        timerControllers[item.id][timerIndex] = {
-          start: () => startBtn.click(),
-          pause: () => pauseBtn.click(),
-          reset: () => resetBtn.click()
-        }
-        outer.appendChild(wrap)
-      })
-      return outer
+        if (!timerControllers[item.id]) timerControllers[item.id] = {};
+        timerControllers[item.id][i] = { start: () => startBtn.click(), pause: () => pauseBtn.click(), reset: () => resetBtn.click() };
+      });
+
+      return outer;
     }
 
-    function buildRepCounterBlock(item, cbEl) {
-      if (!item.repCounter || typeof item.repCounter.goal !== "number") return null
-      const goal = item.repCounter.goal
-      const wrap = document.createElement("div")
-      wrap.className = "counterWrap"
-      const header = document.createElement("div")
-      header.className = "counterHeader"
-      const title = document.createElement("div")
-      title.className = "counterTitle"
-      title.textContent = `Goal ${goal} Reps`
-      const big = document.createElement("div")
-      big.className = "counterBig"
+    function buildRepBlock(item, cb) {
+      if (!item.repCounter?.goal) return null;
+      const goal = item.repCounter.goal;
+      const wrap = document.createElement("div");
+      wrap.className = "counterWrap";
+      const big = document.createElement("div");
+      big.className = "counterBig";
 
-      function refresh() {
-        const c = getCount(item.id)
-        big.textContent = `${c} Of ${goal}`
-        if (c >= goal) setChecked(item.id, true, cbEl)
-      }
+      const btns = document.createElement("div");
+      btns.className = "counterBtns";
+      const minus = document.createElement("button"); minus.textContent = "-1";
+      const plus = document.createElement("button"); plus.textContent = "+1";
+      const done = document.createElement("button"); done.textContent = `Set ${goal}`;
+      const reset = document.createElement("button"); reset.textContent = "Reset";
 
-      header.appendChild(title)
-      header.appendChild(big)
+      const getCount = () => state.days[tKey].counts?.[item.id] || 0;
+      const setCount = (n) => {
+        if (!state.days[tKey].counts) state.days[tKey].counts = {};
+        state.days[tKey].counts[item.id] = Math.max(0, Math.floor(n));
+        const c = getCount();
+        big.textContent = `${c} of ${goal}`;
+        if (c >= goal) setChecked(item.id, true, cb);
+        saveState(state);
+      };
 
-      const btns = document.createElement("div")
-      btns.className = "counterBtns"
-      const minusBtn = document.createElement("button")
-      minusBtn.textContent = "-1"
-      const plusBtn = document.createElement("button")
-      plusBtn.textContent = "+1"
-      const doneBtn = document.createElement("button")
-      doneBtn.textContent = `Set ${goal}`
-      const resetBtn = document.createElement("button")
-      resetBtn.textContent = "Reset"
+      minus.onclick = () => setCount(getCount() - 1);
+      plus.onclick = () => setCount(getCount() + 1);
+      done.onclick = () => setCount(goal);
+      reset.onclick = () => setCount(0);
 
-      minusBtn.onclick = () => { setCount(item.id, getCount(item.id) - 1); refresh() }
-      plusBtn.onclick = () => { setCount(item.id, getCount(item.id) + 1); refresh() }
-      doneBtn.onclick = () => { setCount(item.id, goal); refresh() }
-      resetBtn.onclick = () => { setCount(item.id, 0); refresh() }
-
-      btns.appendChild(minusBtn)
-      btns.appendChild(plusBtn)
-      btns.appendChild(doneBtn)
-      btns.appendChild(resetBtn)
-      wrap.appendChild(header)
-      wrap.appendChild(btns)
-      refresh()
-      return wrap
+      setCount(getCount());
+      btns.append(minus, plus, done, reset);
+      wrap.append(big, btns);
+      return wrap;
     }
 
-    elRunnerSkipBtn.onclick = () => {
-      if (!runnerActive) return
-      clearTransition()
-      runnerIndex += 1
-      advanceRunnerToNextNeeded(true)
-    }
-
-    elRunnerNextNowBtn.onclick = () => {
-      if (!runnerActive) return
-      clearTransition()
-      advanceRunnerToNextNeeded(true)
-    }
-
-    document.addEventListener("timerFinished", () => {
-      if (!runnerActive) return
-      startTransitionThenAdvance()
-    })
-
-    function renderChecklist() {
-      elTodayLine.textContent = `Today: ${fmtDateLong(tKey)}`
-      elChecklist.innerHTML = ""
-
+    function initChecklist() {
+      elChecklist.innerHTML = "";
       routine.forEach((item, idx) => {
-        const row = document.createElement("div")
-        row.className = "row"
-        row.id = `item_${item.id}`
-        row.style.animationDelay = `${idx * 0.05}s`
+        const row = document.createElement("div");
+        row.className = "row";
+        row.tabIndex = 0;
+        row.id = `item_${item.id}`;
 
-        const cb = document.createElement("input")
-        cb.type = "checkbox"
-        cb.checked = !!state.days[tKey].checks[item.id]
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = !!state.days[tKey].checks[item.id];
+        cb.setAttribute("aria-label", `Mark ${item.name} complete`);
+        cb.addEventListener("change", () => setChecked(item.id, cb.checked));
 
-        cb.addEventListener("change", () => {
-          triggerChange(item.id, cb.checked, cb)
-        })
+        const label = document.createElement("div");
+        label.className = "label";
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = `${idx + 1}. ${item.name}`;
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent = item.detail;
+        const howto = document.createElement("div");
+        howto.className = "howto";
+        howto.textContent = item.howto;
 
-        // Swipe Logic
-        let startX = 0
-        let currentX = 0
-        let isDragging = false
-        const threshold = 100
+        const actions = document.createElement("div");
+        actions.className = "rowActions";
+        const doneBtn = document.createElement("button");
+        doneBtn.textContent = "Done";
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "Reset";
+        doneBtn.onclick = () => setChecked(item.id, true);
+        resetBtn.onclick = () => setChecked(item.id, false);
+        actions.append(doneBtn, resetBtn);
 
-        row.addEventListener("touchstart", (e) => {
-          startX = e.touches[0].clientX
-          isDragging = true
-          row.style.transition = "none"
-        }, {passive: true})
+        label.append(title, meta, howto, actions);
 
+        const tBlock = buildTimerBlock(item, cb);
+        if (tBlock) label.appendChild(tBlock);
+
+        const rBlock = buildRepBlock(item, cb);
+        if (rBlock) label.appendChild(rBlock);
+
+        // swipe
+        let startX = 0, currentX = 0, dragging = false;
+        row.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; dragging = true; row.style.transition = "none"; }, { passive: true });
         row.addEventListener("touchmove", (e) => {
-          if (!isDragging) return
-          const x = e.touches[0].clientX
-          const diff = x - startX
-          currentX = diff
-          row.style.transform = `translateX(${diff}px)`
-          
-          if (diff > 50) {
-             row.style.backgroundColor = "rgba(50, 205, 50, 0.2)"
-          } else if (diff < -50) {
-             row.style.backgroundColor = "rgba(128, 128, 128, 0.2)"
-          } else {
-             row.style.backgroundColor = "transparent"
-          }
-        }, {passive: true})
-
+          if (!dragging) return;
+          currentX = e.touches[0].clientX - startX;
+          row.style.transform = `translateX(${currentX}px)`;
+          row.style.backgroundColor = currentX > 50 ? "var(--accentSoft)" : currentX < -50 ? "var(--warningSoft)" : "";
+        }, { passive: true });
         row.addEventListener("touchend", () => {
-          isDragging = false
-          row.style.transition = "transform 0.3s ease, background-color 0.3s ease"
-          row.style.transform = "translateX(0)"
-          row.style.backgroundColor = "transparent"
+          dragging = false;
+          row.style.transition = "transform .2s ease, background-color .2s ease";
+          row.style.transform = "translateX(0)";
+          row.style.backgroundColor = "";
+          if (currentX > 100) setChecked(item.id, true);
+          else if (currentX < -100) setChecked(item.id, false);
+          currentX = 0;
+        });
 
-          if (currentX > threshold) {
-             if (!cb.checked) {
-                 triggerChange(item.id, true, cb)
-                 row.classList.add("flashGreen")
-                 setTimeout(() => row.classList.remove("flashGreen"), 600)
-             }
-          } else if (currentX < -threshold) {
-             if (cb.checked) {
-                 triggerChange(item.id, false, cb)
-                 row.classList.add("flashGrey")
-                 setTimeout(() => row.classList.remove("flashGrey"), 600)
-             }
-          }
-          currentX = 0
-        })
+        row.addEventListener("keydown", (e) => {
+          if (e.key.toLowerCase() === "d") setChecked(item.id, true);
+          if (e.key.toLowerCase() === "r") setChecked(item.id, false);
+        });
 
-        const label = document.createElement("div")
-        label.className = "label"
-        const title = document.createElement("div")
-        title.style.fontWeight = "700"
-        title.textContent = `${idx + 1}. ${item.name}`
-        const meta = document.createElement("div")
-        meta.className = "meta"
-        meta.textContent = item.detail
-        const howto = document.createElement("div")
-        howto.className = "howto"
-        howto.textContent = item.howto
+        row.append(cb, label);
+        elChecklist.appendChild(row);
 
-        label.appendChild(title)
-        label.appendChild(meta)
-        label.appendChild(howto)
-
-        const demoBlock = buildDemoBlock(item)
-        if (demoBlock) label.appendChild(demoBlock)
-
-        const timersBlock = buildTimersBlock(item, cb)
-        if (timersBlock) label.appendChild(timersBlock)
-
-        const repBlock = buildRepCounterBlock(item, cb)
-        if (repBlock) label.appendChild(repBlock)
-
-        row.appendChild(cb)
-        row.appendChild(label)
-        elChecklist.appendChild(row)
-        itemElements[item.id] = row
-      })
-
-      updateCompletion()
-      renderHistoryCompact()
+        itemElements[item.id] = row;
+        checkboxElements[item.id] = cb;
+      });
     }
 
-    function getMonthlyAverage() {
-      const keys = Object.keys(state.days)
-      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000
-      let totalPct = 0
-      let count = 0
-      keys.forEach(key => {
-        const day = state.days[key]
-        const parts = key.split("_").map(Number)
-        const date = new Date(parts[0], parts[1] - 1, parts[2])
-        if (date.getTime() > thirtyDaysAgo) {
-          totalPct += day.summary.pct || 0
-          count++
-        }
-      })
-      const avg = count > 0 ? Math.round(totalPct / count) : 0
-      toast("30 Day Average: " + avg + "%")
+    function updateChecklistUI() {
+      routine.forEach((r) => updateRowVisual(r.id));
+      updateFocusCard();
+      updateCompletion();
     }
 
-    document.getElementById("monthlyAvgBtn").onclick = getMonthlyAverage
-
-    document.getElementById("resetTodayBtn").onclick = () => {
-      state.days[tKey] = { checks: {}, completedAll: false, counts: {}, events: {}, summary: {} }
-      saveState(state)
-      renderChecklist()
-      if (runnerActive) {
-        clearTransition()
-        advanceRunnerToNextNeeded(false)
+    function runnerAdvance() {
+      while (runnerIndex < routine.length && state.days[tKey].checks[routine[runnerIndex].id]) runnerIndex += 1;
+      if (runnerIndex >= routine.length) {
+        runnerActive = false;
+        document.getElementById("startRoutineBtn").style.display = "inline-block";
+        document.getElementById("stopRoutineBtn").style.display = "none";
+        toast("Routine finished ✅");
       }
-      toast("Today Reset")
+      updateChecklistUI();
+      if (runnerActive) {
+        const item = routine[runnerIndex];
+        itemElements[item.id]?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     }
+
+    document.getElementById("startRoutineBtn").onclick = () => {
+      runnerActive = true;
+      runnerIndex = 0;
+      document.getElementById("startRoutineBtn").style.display = "none";
+      document.getElementById("stopRoutineBtn").style.display = "inline-block";
+      runnerAdvance();
+    };
+
+    document.getElementById("stopRoutineBtn").onclick = () => {
+      runnerActive = false;
+      document.getElementById("startRoutineBtn").style.display = "inline-block";
+      document.getElementById("stopRoutineBtn").style.display = "none";
+      updateChecklistUI();
+    };
+
+    document.getElementById("jumpToStepBtn").onclick = () => {
+      if (!activeItemId) return;
+      itemElements[activeItemId]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
 
     document.getElementById("markAllBtn").onclick = () => {
-      routine.forEach((r) => {
-        state.days[tKey].checks[r.id] = true
-        if (!state.days[tKey].events) state.days[tKey].events = {}
-        state.days[tKey].events[r.id] = Date.now()
-      })
-      saveState(state)
-      renderChecklist()
-      if (runnerActive) {
-        clearTransition()
-        startTransitionThenAdvance()
+      routine.forEach((r) => state.days[tKey].checks[r.id] = true);
+      saveState(state); updateChecklistUI(); toast("All done");
+    };
+
+    document.getElementById("resetTodayBtn").onclick = () => {
+      state.days[tKey] = { checks: {}, completedAll: false, counts: {}, events: {}, summary: {} };
+      saveState(state); initChecklist(); updateChecklistUI(); toast("Today reset");
+    };
+
+    document.getElementById("monthlyAvgBtn").onclick = () => {
+      const keys = Object.keys(state.days);
+      const threshold = Date.now() - 30*24*60*60*1000;
+      let total = 0, count = 0;
+      keys.forEach((k) => {
+        const [y,m,d] = k.split("_").map(Number);
+        const ts = new Date(y,m-1,d).getTime();
+        if (ts > threshold) { total += state.days[k]?.summary?.pct || 0; count++; }
+      });
+      toast(`30-day average: ${count ? Math.round(total/count) : 0}%`);
+    };
+
+    elThemeToggle.onclick = rotateTheme;
+    elQuiet.checked = state.settings.quietMode;
+    elQuiet.onchange = () => { state.settings.quietMode = !!elQuiet.checked; saveState(state); };
+
+    elCompactDone.checked = state.settings.compactDone;
+    elCompactDone.onchange = () => {
+      state.settings.compactDone = !!elCompactDone.checked;
+      saveState(state);
+      updateChecklistUI();
+    };
+
+    document.addEventListener("change", (e) => {
+      if (e.target?.matches('input[type="checkbox"]') && runnerActive) {
+        const curr = routine[runnerIndex];
+        if (curr && state.days[tKey].checks[curr.id]) runnerAdvance();
       }
-      toast("All Done")
+    });
+
+    // lightweight pruning to keep localStorage efficient
+    function pruneHistory(days, keepDays = 120) {
+      const cutoff = Date.now() - keepDays*24*60*60*1000;
+      Object.keys(days).forEach((k) => {
+        const [y,m,d] = k.split("_").map(Number);
+        if (new Date(y,m-1,d).getTime() < cutoff) {
+          const summary = days[k]?.summary || {};
+          days[k] = { summary, completedAll: !!days[k]?.completedAll, checks: {}, counts: {}, events: {} };
+        }
+      });
     }
 
-    elQuiet.checked = state.settings.quietMode
-    elQuiet.onchange = () => {
-      state.settings.quietMode = !!elQuiet.checked
-      saveState(state)
-    }
+    pruneHistory(state.days);
+    saveState(state);
 
-    elGapValue.textContent = String(getTransitionSeconds())
-    elGapMinus.onclick = () => {
-      state.settings.transitionSeconds = Math.max(0, getTransitionSeconds() - 1)
-      elGapValue.textContent = String(getTransitionSeconds())
-      saveState(state)
-    }
-    elGapPlus.onclick = () => {
-      state.settings.transitionSeconds = Math.min(60, getTransitionSeconds() + 1)
-      elGapValue.textContent = String(getTransitionSeconds())
-      saveState(state)
-    }
-
-    elStartRoutine.onclick = () => runnerStart()
-    elStopRoutine.onclick = () => runnerStop()
-
-    applyTheme()
-    renderChecklist()
+    elTodayLine.textContent = `Today: ${fmtDateLong(tKey)}`;
+    applyTheme();
+    initChecklist();
+    updateChecklistUI();
   </script>
 </body>
 </html>
